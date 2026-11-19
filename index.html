@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b2b">
+<title>Gracias por tu felicitación</title>
+<style>
+:root{--night:#101b2b;--blue:#1c3046;--gold:#d8bd83;--cream:#f6f0e5;--muted:#c8c2b7}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#30445a 0%,#17283b 42%,#0c1522 100%);color:var(--cream);font-family:Georgia,'Times New Roman',serif;display:grid;place-items:center;padding:22px}
+.card{width:min(100%,520px);min-height:650px;border:1px solid rgba(216,189,131,.65);border-radius:22px;padding:clamp(25px,7vw,48px) clamp(22px,7vw,44px);position:relative;overflow:hidden;background:linear-gradient(155deg,rgba(255,255,255,.055),rgba(255,255,255,.012));box-shadow:0 28px 80px #0008;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.card:before,.card:after{content:"✦";position:absolute;color:var(--gold);opacity:.75;font-size:22px}
+.card:before{top:24px;left:27px}.card:after{bottom:24px;right:27px}
+.kicker{font:600 11px/1.5 Arial,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 22px}
+h1{font-weight:400;font-size:clamp(34px,9vw,52px);line-height:1.08;margin:0 0 18px;color:#fff7e9}
+.rule{width:74px;height:1px;background:var(--gold);margin:9px auto 27px}
+.intro{font:15px/1.7 Arial,sans-serif;color:var(--muted);max-width:340px;margin:0 auto 28px}
+button{border:1px solid var(--gold);background:linear-gradient(135deg,#e2ca98,#b9975d);color:#172334;border-radius:999px;padding:15px 27px;font:700 12px Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 24px #0004}
+button:focus-visible{outline:3px solid white;outline-offset:4px}
+.message{display:none;animation:rise .9s ease both;max-width:370px}
+.message.show{display:block}
+.message p{font-size:clamp(19px,5vw,23px);line-height:1.65;margin:0 0 22px;color:#fff8ec}
+.signature{font:italic 17px Georgia,serif;color:var(--gold);margin-top:12px}
+.controls{display:none;align-items:center;gap:10px;margin-top:25px;font:11px Arial,sans-serif;color:var(--muted)}
+.controls.show{display:flex}
+.control{background:transparent;color:var(--cream);border:1px solid #b9a77d;border-radius:30px;padding:10px 15px;box-shadow:none;letter-spacing:.05em}
+.note{font:11px/1.5 Arial,sans-serif;color:#aeb6bf;margin-top:24px;max-width:300px}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-height:720px){.card{min-height:570px}}
+</style>
+</head>
+<body>
+<main class="card">
+  <p class="kicker">Un detalle para ti</p>
+  <h1>Gracias<br>de corazón</h1>
+  <div class="rule"></div>
+  <p class="intro" id="intro">Hay felicitaciones que alegran el día. La tuya ha sido una de ellas.</p>
+  <button id="openBtn">Abrir mi agradecimiento</button>
+  <section class="message" id="message" aria-live="polite">
+    <p>Gracias por acordarte de mi cumpleaños y por dedicarme un momento de tu día.</p>
+    <p>Me ha hecho mucha ilusión recibir tu felicitación. ¡Gracias por estar ahí!</p>
+    <div class="signature">Un abrazo</div>
+  </section>
+  <div class="controls" id="controls">
+    <button class="control" id="soundBtn">Pausar música</button>
+    <span>Faded · piano relajante</span>
+  </div>
+  <div class="note" id="note">La música comienza al abrir la postal.</div>
+</main>
+<audio id="music" preload="auto" loop src="faded-piano.mp3"></audio>
+<script>
+const audio=document.getElementById('music');
+const openBtn=document.getElementById('openBtn');
+const message=document.getElementById('message');
+const controls=document.getElementById('controls');
+const note=document.getElementById('note');
+const soundBtn=document.getElementById('soundBtn');
+openBtn.addEventListener('click', async()=>{
+  openBtn.style.display='none';
+  document.getElementById('intro').style.display='none';
+  message.classList.add('show');
+  controls.classList.add('show');
+  note.style.display='none';
+  try{audio.currentTime=0; await audio.play(); soundBtn.textContent='Pausar música';}
+  catch(e){note.style.display='block';note.textContent='Tu navegador ha bloqueado el sonido. Pulsa “Reproducir música” para escucharlo.';soundBtn.textContent='Reproducir música';}
+});
+soundBtn.addEventListener('click',async()=>{
+  if(audio.paused){try{await audio.play();soundBtn.textContent='Pausar música';}catch(e){soundBtn.textContent='Reintentar música';}}
+  else{audio.pause();soundBtn.textContent='Reproducir música';}
+});
+</script>
+</body>
+</html>
